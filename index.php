@@ -1,15 +1,20 @@
 <?php
-
-	require_once './db-config.php';
+	require_once './routines.php';
 	
-	try {
-    	$pdo = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPass);
-	} catch (PDOException $e) {
-    	echo 'Подключение не удалось: ' . $e->getMessage();
-	}
+	$user = new User();
 
-	$sql = "SELECT * FROM `tasks`";	
-	$data = $pdo->query($sql);
+	if ($user->isLogedin()) {
+		try {
+			$pdo = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPass);
+		} catch (PDOException $e) {
+			echo 'Подключение не удалось: ' . $e->getMessage();
+		}
+		$sql = "SELECT * FROM `tasks` WHERE `";	
+		$data = $pdo->query($sql);
+	}
+	else {
+		header('Location: login.php');
+	}
 
 ?>
 
@@ -55,6 +60,7 @@
 	}
 ?>
 </table>
+<a href="logout.php">Выйти</a>
 
 </body>
 </html>
