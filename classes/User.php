@@ -7,27 +7,6 @@ class User
 	private $login;
 	private $password;
 
-	public function getUserById ($id)
-	{
-		require_once './db.php';
-		try {
-	    	$pdo = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPass);
-		} catch (PDOException $e) {
-	    	echo 'Подключение не удалось: ' . $e->getMessage();
-		}
-		$sql = "SELECT * FROM `user` WHERE `id`=".$id;
-		$data = $pdo->query($sql);
-		if ($data) {
-			foreach ($data as $user) {
-				$this->id = $user['id'];
-				$this->login = $user['login'];
-				$this->password = $user['password'];
-				return true;
-			}
-		}
-		return false;
-	}
-
 	public function getUserByLogin ($login)
 	{
 		require './db.php';
@@ -108,6 +87,11 @@ class User
 			}
 		}
 		return false;
+	}
+
+	public function getId ()
+	{
+		return $this->id;
 	}
 }
 ?>

@@ -9,7 +9,7 @@
 		} catch (PDOException $e) {
 			echo 'Подключение не удалось: ' . $e->getMessage();
 		}
-		$sql = "SELECT * FROM `tasks` WHERE `";	
+		$sql = "SELECT * FROM `task` WHERE `user_id`=".$user->getId( );	
 		$data = $pdo->query($sql);
 	}
 	else {
