@@ -5,11 +5,11 @@
 	{
 		switch ($sort) {
 			case 'desc':
-				return ' ORDER BY `description`';
+				return ' ORDER BY description';
 			case 'status':
-				return ' ORDER BY `is_done`';
+				return ' ORDER BY is_done';
 			case 'date':
-				return ' ORDER BY `date_added`';
+				return ' ORDER BY date_added';
 		}
 		return '';
 	}
@@ -41,9 +41,9 @@
 		} catch (PDOException $e) {
 			echo 'Подключение не удалось: ' . $e->getMessage();
 		}
-		$sql1 = "SELECT * FROM `task` WHERE `user_id`=".$user->getId( ).sort2order($sort1);	
+		$sql1 = "SELECT task.*, reporter.login AS rlogin, assignie.login AS alogin FROM task INNER JOIN user AS reporter ON task.user_id=reporter.id INNER JOIN user AS assignie ON task.assigned_user_id=assignie.id WHERE task.user_id=".$user->getId( ).sort2order($sort1);
 		$data1 = $pdo->query($sql1);
-		$sql2 = "SELECT * FROM `task` WHERE `assigned_user_id`=".$user->getId( ).sort2order($sort2);	
+		$sql2 = "SELECT task.*, reporter.login AS rlogin, assignie.login AS alogin FROM task INNER JOIN user AS reporter ON task.user_id=reporter.id INNER JOIN user AS assignie ON task.assigned_user_id=assignie.id WHERE task.assigned_user_id=".$user->getId( ).sort2order($sort2);	
 		$data2 = $pdo->query($sql2);
 	}
 	else {
@@ -72,7 +72,9 @@
 		<th><a href="index.php?sort1=desc">Описание</a></th>
 		<th><a href="index.php?sort1=status">Статус</a></th>
 		<th><a href="index.php?sort1=date">Дата добавления</a></th>
-		<th colspan="3">Действия</th>
+		<th>Автор</th>
+		<th>Исполнитель</th>
+		<th colspan="4">Действия</th>
 	</tr>
 <?php
 	if ($data1) {
@@ -86,7 +88,18 @@
 				$is_done = '<span style="color: green;">Выполнено</span>';
 				$workflow = "<a href='reopen.php?id=$id'>Открыть заново</a>";
 			}
-			echo "<tr><td>$id</td><td>".$row['description']."</td><td>$is_done</td><td>".$row['date_added']."</td><td>$workflow</td><td><a href='edit.php?id=$id'>Редактировать</a></td><td><a href='delete.php?id=$id'>Удалить</a></td></tr>";
+			echo "<tr>
+				<td>$id</td>
+				<td>".$row['description']."</td>
+				<td>$is_done</td>
+				<td>".$row['date_added']."</td>
+				<td>".$row['rlogin']."</td>
+				<td>".$row['alogin']."</td>
+				<td>$workflow</td>
+				<td><a href='edit.php?id=$id'>Редактировать</a></td>
+				<td><a href='assign.php?id=$id'>Назначить</a></td>
+				<td><a href='delete.php?id=$id'>Удалить</a></td>
+			</tr>";
 		}
 	}
 	else {
@@ -102,7 +115,9 @@
 		<th><a href="index.php?sort2=desc">Описание</a></th>
 		<th><a href="index.php?sort2=status">Статус</a></th>
 		<th><a href="index.php?sort2=date">Дата добавления</a></th>
-		<th colspan="3">Действия</th>
+		<th>Автор</th>
+		<th>Исполнитель</th>
+		<th colspan="4">Действия</th>
 	</tr>
 <?php
 	if ($data2) {
@@ -116,7 +131,18 @@
 				$is_done = '<span style="color: green;">Выполнено</span>';
 				$workflow = "<a href='reopen.php?id=$id'>Открыть заново</a>";
 			}
-			echo "<tr><td>$id</td><td>".$row['description']."</td><td>$is_done</td><td>".$row['date_added']."</td><td>$workflow</td><td><a href='edit.php?id=$id'>Редактировать</a></td><td><a href='delete.php?id=$id'>Удалить</a></td></tr>";
+			echo "<tr>
+				<td>$id</td>
+				<td>".$row['description']."</td>
+				<td>$is_done</td>
+				<td>".$row['date_added']."</td>
+				<td>".$row['rlogin']."</td>
+				<td>".$row['alogin']."</td>
+				<td>$workflow</td>
+				<td><a href='edit.php?id=$id'>Редактировать</a></td>
+				<td><a href='assign.php?id=$id'>Назначить</a></td>
+				<td><a href='delete.php?id=$id'>Удалить</a></td>
+			</tr>";
 		}
 	}
 	else {

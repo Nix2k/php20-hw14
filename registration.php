@@ -43,6 +43,6 @@
 	<input type="password" name="pass" placeholder="Пароль"><br>
 	<input type="submit" name="submit" value="Зарегистрироваться"><br>
 </form>
-<a href="registration.php">Регистрация нового пользователя</a>
+<a href="login.php">Вход для зарегистрированных пользователей</a>
 </body>
 </html>
