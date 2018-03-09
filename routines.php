@@ -11,7 +11,7 @@
 
 	function checkPass($password) 
 	{
-		if ((strlen($password)>=8) && ((preg_match('/[a-z]/'))*(preg_match('/[A-Z]/'))*(preg_match('/[0-9]/'))==1)){
+		if ((strlen($password)>=8) && ((preg_match('/[a-z]/',$password))*(preg_match('/[A-Z]/',$password))*(preg_match('/[0-9]/',$password))==1)){
 			return true;
 		}
 		return false;

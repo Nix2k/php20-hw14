@@ -7,7 +7,7 @@
 	if ($user->isLogedin()) {
 		header('Location: index.php');
 	}
-	if ((isset($_GET['newtask'])) && (isset($_GET['login'])) && (isset($_GET['pass']))) {
+	if ((isset($_GET['submit'])) && (isset($_GET['login'])) && (isset($_GET['pass']))) {
 		$login = clearInput($_GET['login']);
 		$password = clearInput($_GET['pass']);
 		if ($user->loginUser($login,$password)) {
@@ -31,7 +31,7 @@
 <form action="login.php">
 	<input type="text" name="login" placeholder="Имя пользователя"><br>
 	<input type="password" name="pass" placeholder="Пароль"><br>
-	<input type="submit" name="newtask" value="Вход"><br>
+	<input type="submit" name="submit" value="Вход"><br>
 </form>
 <a href="registration.php">Регистрация нового пользователя</a>
 </body>

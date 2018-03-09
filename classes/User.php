@@ -30,7 +30,7 @@ class User
 
 	public function addUser ($login, $password)
 	{
-		$this->password = hash('sha128', $password.$this->salt);
+		$this->password = hash('sha256', $password.$this->salt);
 		$this->login = $login;
 		require './db.php';
 		try {
@@ -38,7 +38,7 @@ class User
 		} catch (PDOException $e) {
 	    	echo 'Подключение не удалось: ' . $e->getMessage();
 		}
-		$sql = "INSERT INTO `user` (`login`, `password`) VALUES '".$this->login."', '".$this->password."'";
+		$sql = "INSERT INTO `user` (`login`, `password`) VALUES ('".$this->login."', '".$this->password."')";
 		return $pdo->query($sql);
 	}
 
