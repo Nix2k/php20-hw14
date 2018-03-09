@@ -1,5 +1,5 @@
 <?php
-	require_once './db-config.php';
+	require_once './routines.php';
 	
 	try {
     	$pdo = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPass);
@@ -9,7 +9,7 @@
 
 	if (isset($_GET['id'])) {
 		if (is_numeric($_GET['id'])){
-			$sql = "DELETE FROM `tasks` WHERE `id`=".$_GET['id'];
+			$sql = "DELETE FROM `task` WHERE `id`=".$_GET['id'];
 			$data = $pdo->query($sql);
 			if (!$data) {
 				die ('Ошибка!');

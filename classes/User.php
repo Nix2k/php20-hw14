@@ -2,7 +2,7 @@
 
 class User 
 {
-	private const salt = 'f1b78b02cafb265e4fc6f2a70e391568';
+	private $salt = 'f1b78b02cafb265e4fc6f2a70e391568';
 	private $id;
 	private $login;
 	private $password;
@@ -44,7 +44,7 @@ class User
 
 	public function loginUser ($login, $password)
 	{
-		$password = hash('sha256', $password.self::salt);
+		$password = hash('sha256', $password.$this->salt);
 		require './db.php';
 		try {
 	    	$pdo = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPass);
