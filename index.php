@@ -1,18 +1,5 @@
 <?php
 	require_once './routines.php';
-	
-	function sort2order ($sort)
-	{
-		switch ($sort) {
-			case 'desc':
-				return ' ORDER BY description';
-			case 'status':
-				return ' ORDER BY is_done';
-			case 'date':
-				return ' ORDER BY date_added';
-		}
-		return '';
-	}
 
 	$sort1 = '';
 	$sort2 = '';
@@ -42,9 +29,9 @@
 			echo 'Подключение не удалось: ' . $e->getMessage();
 		}
 		$sql1 = "SELECT task.*, reporter.login AS rlogin, assignie.login AS alogin FROM task INNER JOIN user AS reporter ON task.user_id=reporter.id INNER JOIN user AS assignie ON task.assigned_user_id=assignie.id WHERE task.user_id=".$user->getId( ).sort2order($sort1);
-		$data1 = $pdo->query($sql1);
-		$sql2 = "SELECT task.*, reporter.login AS rlogin, assignie.login AS alogin FROM task INNER JOIN user AS reporter ON task.user_id=reporter.id INNER JOIN user AS assignie ON task.assigned_user_id=assignie.id WHERE task.assigned_user_id=".$user->getId( ).sort2order($sort2);	
-		$data2 = $pdo->query($sql2);
+		$sql2 = "SELECT task.*, reporter.login AS rlogin, assignie.login AS alogin FROM task INNER JOIN user AS reporter ON task.user_id=reporter.id INNER JOIN user AS assignie ON task.assigned_user_id=assignie.id WHERE task.assigned_user_id=".$user->getId( ).sort2order($sort2);
+		$dashboardIamReporter = new Dashboard($sql1);
+		$dashboardMyTasks = new Dashboard($sql2);
 	}
 	else {
 		header('Location: login.php');
@@ -61,95 +48,17 @@
 </head>
 <body>
 
-<h2>Созданные мной задачи</h2>
 <form action="newtask.php" method="GET">
 	<input type="text" name="desc" placeholder="Описание">
 	<input type="submit" name="newtask" value="Добавить задачу">
 </form>
-<table>
-	<tr>
-		<th>id</th>
-		<th><a href="index.php?sort1=desc">Описание</a></th>
-		<th><a href="index.php?sort1=status">Статус</a></th>
-		<th><a href="index.php?sort1=date">Дата добавления</a></th>
-		<th>Автор</th>
-		<th>Исполнитель</th>
-		<th colspan="4">Действия</th>
-	</tr>
-<?php
-	if ($data1) {
-		foreach ($data1 as $row) {
-			$id = $row['id'];
-			if ($row['is_done']==0) {
-				$is_done = '<span style="color: red;">Не выполнено</span>';
-				$workflow = "<a href='done.php?id=$id'>Выполнено</a>";
-			}
-			else {
-				$is_done = '<span style="color: green;">Выполнено</span>';
-				$workflow = "<a href='reopen.php?id=$id'>Открыть заново</a>";
-			}
-			echo "<tr>
-				<td>$id</td>
-				<td>".$row['description']."</td>
-				<td>$is_done</td>
-				<td>".$row['date_added']."</td>
-				<td>".$row['rlogin']."</td>
-				<td>".$row['alogin']."</td>
-				<td>$workflow</td>
-				<td><a href='edit.php?id=$id'>Редактировать</a></td>
-				<td><a href='assign.php?id=$id'>Назначить</a></td>
-				<td><a href='delete.php?id=$id'>Удалить</a></td>
-			</tr>";
-		}
-	}
-	else {
-		echo "Нет результатов";
-	}
-?>
-</table>
+
+<h2>Созданные мной задачи</h2>
+<?php $dashboardIamReporter->printDashboard(); ?>
 
 <h2>Назначенные мне задачи</h2>
-<table>
-	<tr>
-		<th>id</th>
-		<th><a href="index.php?sort2=desc">Описание</a></th>
-		<th><a href="index.php?sort2=status">Статус</a></th>
-		<th><a href="index.php?sort2=date">Дата добавления</a></th>
-		<th>Автор</th>
-		<th>Исполнитель</th>
-		<th colspan="4">Действия</th>
-	</tr>
-<?php
-	if ($data2) {
-		foreach ($data2 as $row) {
-			$id = $row['id'];
-			if ($row['is_done']==0) {
-				$is_done = '<span style="color: red;">Не выполнено</span>';
-				$workflow = "<a href='done.php?id=$id'>Выполнено</a>";
-			}
-			else {
-				$is_done = '<span style="color: green;">Выполнено</span>';
-				$workflow = "<a href='reopen.php?id=$id'>Открыть заново</a>";
-			}
-			echo "<tr>
-				<td>$id</td>
-				<td>".$row['description']."</td>
-				<td>$is_done</td>
-				<td>".$row['date_added']."</td>
-				<td>".$row['rlogin']."</td>
-				<td>".$row['alogin']."</td>
-				<td>$workflow</td>
-				<td><a href='edit.php?id=$id'>Редактировать</a></td>
-				<td><a href='assign.php?id=$id'>Назначить</a></td>
-				<td><a href='delete.php?id=$id'>Удалить</a></td>
-			</tr>";
-		}
-	}
-	else {
-		echo "Нет результатов";
-	}
-?>
-</table>
+<?php $dashboardMyTasks->printDashboard(); ?>
+
 <a href="logout.php">Выйти</a>
 
 </body>

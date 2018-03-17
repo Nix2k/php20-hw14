@@ -6,36 +6,41 @@ class Task
 	private $description;
 	private $userId;
 	private $assignieId;
-	private $isDone;
+	private $status;
 	private $createdDate;
 
-	public function __construct ($description = null, $userId = null)
+	public function __construct ($id = null, $description = null, $reporter = null, $assignie = null, $status = null, $date = null)
 	{
+		$this->id = $id;
 		$this->description = $description;
-		$this->userId = $userId;
-		$this->assignieId = $userId;
+		$this->reporter = $reporter;
+		$this->assignie = $assignie;
+		$this->status = $status;
+		$this->createdDate = $date;
 	}
 
-	public function getById ($id)
+	public function printTaskForDashboard()
 	{
-		try {
-	    	$pdo = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPass);
-		} catch (PDOException $e) {
-	    	echo 'Подключение не удалось: ' . $e->getMessage();
+		if ($this->status==0) {
+			$status = '<span style="color: red;">Не выполнено</span>';
+			$workflow = "<a href='done.php?id=$this->id'>Выполнено</a>";
 		}
-
-		$sql = "SELECT * FROM `task` WHERE `id`=".$id;
-		$data = $pdo->query($sql);
-		if ($data) {
-			foreach ($data as $task) {
-				$this->id = $task['id'];
-				$this->userId = $task['user_id'];
-				$this->assignieId = $task['assigned_user_id'];
-				$this->description = $task['description'];
-				$this->isDone = $task['is_done'];
-				$this->createdDate = $task['date_added'];
-			}
+		else {
+			$status = '<span style="color: green;">Выполнено</span>';
+			$workflow = "<a href='reopen.php?id=$this->id'>Открыть заново</a>";
 		}
+		echo "<tr>
+				<td>$this->id</td>
+				<td>$this->description</td>
+				<td>$status</td>
+				<td>$this->createdDate</td>
+				<td>$this->reporter</td>
+				<td>$this->assignie</td>
+				<td>$workflow</td>
+				<td><a href='edit.php?id=$this->id'>Редактировать</a></td>
+				<td><a href='assign.php?id=$this->id'>Назначить</a></td>
+				<td><a href='delete.php?id=$this->id'>Удалить</a></td>
+			</tr>";
 	}
 }
 ?>
