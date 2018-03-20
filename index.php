@@ -29,7 +29,7 @@
 			echo 'Подключение не удалось: ' . $e->getMessage();
 		}
 		$sql1 = "SELECT task.*, reporter.login AS rlogin, assignie.login AS alogin FROM task INNER JOIN user AS reporter ON task.user_id=reporter.id INNER JOIN user AS assignie ON task.assigned_user_id=assignie.id WHERE task.user_id=".$user->getId( ).sort2order($sort1);
-		$sql2 = "SELECT task.*, reporter.login AS rlogin, assignie.login AS alogin FROM task INNER JOIN user AS reporter ON task.user_id=reporter.id INNER JOIN user AS assignie ON task.assigned_user_id=assignie.id WHERE task.assigned_user_id=".$user->getId( ).sort2order($sort2);
+		$sql2 = "SELECT task.*, reporter.login AS rlogin, assignie.login AS alogin FROM task INNER JOIN user AS reporter ON task.user_id=reporter.id INNER JOIN user AS assignie ON task.assigned_user_id=assignie.id WHERE task.assigned_user_id=".$user->getId( )." AND reporter.id!=".$user->getId( ).sort2order($sort2);
 		$dashboardIamReporter = new Dashboard($sql1);
 		$dashboardMyTasks = new Dashboard($sql2);
 	}

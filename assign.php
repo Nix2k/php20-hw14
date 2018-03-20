@@ -51,7 +51,7 @@
 		if (is_numeric($_GET['id'])){
 			$sql = "SELECT task.*, reporter.login AS rlogin, assignie.login AS alogin FROM task INNER JOIN user AS reporter ON task.user_id=reporter.id INNER JOIN user AS assignie ON task.assigned_user_id=assignie.id WHERE task.id=".$_GET['id'];
 			$data = $pdo->query($sql);
-			$sql1 = "SELECT * FROM user";
+			$sql1 = "SELECT * FROM user WHERE id!=".$user->getId( );
 			$data1= $pdo->query($sql1);
 			if ($data) {
 				foreach ($data as $row) {
